@@ -1,0 +1,39 @@
+{% extends 'base.html'%}
+{% block title %}{{user.first_name}} {{user.last_name}}{% endblock %}
+{% block content%}
+<h1 class="h1">{{user.first_name}} {{user.last_name}}</h1>
+<ul>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+            <img class="profile rounded float-start" src="{{user.image_url}}" alt="{{user.first_name}} {{user.last_name}}"">
+            </div>
+            <div class="col user-info my-auto">
+            <li>ID: {{user.id}}</li>
+            <li>Name: {{user.first_name}} {{user.last_name}}</li>
+            </div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+        </div>
+    </div>
+</ul>
+
+<form>
+    <button class="btn btn-primary" formaction="/users/{{user.id}}/edit" formmethod="GET">Edit</button>
+    <button class="btn btn-danger"formaction="/users/{{user.id}}/delete" formmethod="POST">Delete</button>  
+</form>
+
+<h1> Posts </h1>
+
+<ul>
+    {% for post in posts %}
+    <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
+    {% endfor %}
+</ul>
+<form>
+    <button class="btn btn-primary" formaction="/users/{{user.id}}/posts/new" formmethod="GET">Add Post</button>
+</form>
+
+
+{% endblock %}

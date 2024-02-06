@@ -1,0 +1,21 @@
+body {
+    margin: 20px;
+    padding: 10px;
+}
+img {
+    width: 300px;
+}
+
+.profile {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.user-info {
+    text-align: left;
+}
