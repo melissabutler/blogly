@@ -59,6 +59,15 @@ class Post(db.Model):
                         nullable=False,
                         )
     user= db.relationship("User", backref='users')
+
+class Tag(db.Model):
+    __tablename__ = "tags"
+
+    id= db.Column(db.Integer,
+                  primary_key=True,
+                  autoincrement=True)
+    name= db.Column(db.Text,
+                     unique=True)
     
     
 def connect_db(app):

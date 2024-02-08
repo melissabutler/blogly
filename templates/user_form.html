@@ -4,12 +4,12 @@
 
 {% block content %}
 <h2>Create User</h2>
-<form action="/users/new" method="POST">
+<form action="/users/new">
     <input type="text" name="first_name" placeholder="Enter a first name">
     <input type="text" name="last_name" placeholder="Enter a last name">
     <input type="text" name="image_url" placeholder="Provide an image url of this user">
-    <button class="btn btn-primary">Add User</button>   
-    <a href="/users" class="btn btn-danger">Cancel</button>
+    <button class="btn btn-primary" formmethod="POST">Add User</button>   
+    <button class="btn btn-danger" formaction="/users">Cancel</button>
 </form>
 
 {% endblock %}

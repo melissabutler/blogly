@@ -1,6 +1,6 @@
 """Blogly application."""
 
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Post
 
@@ -41,14 +41,22 @@ def user_form():
 def create_user():
     """ Redirects to user details after form submisson"""
     first_name = request.form["first_name"]
+    if first_name == "":
+        flash("Please enter a first name.", "ERROR")
+
     last_name = request.form["last_name"]
-    image_url = request.form["image_url"]
+    if last_name == "":
+        flash("Please enter a last name.", "ERROR") 
 
-    new_user = User(first_name=first_name, last_name=last_name, image_url=image_url)
-    db.session.add(new_user)
-    db.session.commit()
-
-    return redirect(f'/users/{new_user.id}')
+    else:
+        image_url = request.form["image_url"]
+        new_user = User(first_name=first_name, last_name=last_name, image_url=image_url)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("New user added.", "SUCCESS")
+        return redirect(f'/users/{new_user.id}')
+    return redirect('/users/new')
+    
 
 @app.route('/users/<int:user_id>')
 def show_user(user_id):
@@ -70,14 +78,20 @@ def edit_user(user_id):
 
     user.first_name = request.form["first_name"]
     if user.first_name == "":
-        print('First name error')
+        flash('Please enter a first name', 'ERROR')
     user.last_name = request.form["last_name"]
+    if user.last_name == "":
+        flash("Please enter a last name", "ERROR")
     user.image_url = request.form["image_url"]
-
-    db.session.add(user)
-    db.session.commit()
-
-    return redirect(f'/users')
+    if user.image_url == "":
+        flash("Please update image url", "ERROR")
+    
+    else:
+        db.session.add(user)
+        db.session.commit()
+        flash("User successfully edited", "SUCCESS")
+        return redirect(f'/users/{user_id}')
+    return redirect(f'/users/{user_id}/edit')
 
 @app.route('/users/<int:user_id>/delete', methods=["POST"])
 def delete_user(user_id):
@@ -86,7 +100,7 @@ def delete_user(user_id):
 
     db.session.delete(user)
     db.session.commit()
-    
+    flash("User deleted", "SUCCESS")
     return redirect('/users')
 
 # POST ROUTES#######################################
@@ -103,17 +117,21 @@ def new_post(user_id):
     user = User.query.get_or_404(user_id)
 
     title = request.form["title"]
+    if title == "":
+        flash("Please enter a title", "ERROR")
     content= request.form["content"]
-    
-
-    new_post = Post(title = request.form["title"],
+    if content =="":
+        flash("Please enter some content", "ERROR")
+    else:
+        user=user
+        new_post = Post(title = request.form["title"],
                     content= request.form["content"],
                     user=user)
-
-    db.session.add(new_post)
-    db.session.commit()
-
-    return redirect(f"/users/{user_id}")
+        db.session.add(new_post)
+        db.session.commit()
+        flash("Post successfully created", "SUCCESS")
+        return redirect(f"/users/{user_id}")
+    return redirect(f"/users/{user_id}/posts/new")
 
 @app.route('/posts/<int:post_id>')
 def show_post(post_id):
@@ -135,12 +153,17 @@ def edit_post(post_id):
     post= Post.query.get_or_404(post_id)
 
     post.title = request.form["title"]
+    if post.title == "":
+        flash("Please submit new title", "ERROR")
     post.content = request.form["content"]
-
-    db.session.add(post)
-    db.session.commit()
-
-    return redirect(f'/posts/{post_id}')
+    if post.content == "":
+        flash("Please enter new post content", "ERROR")
+    else:
+        db.session.add(post)
+        db.session.commit()
+        flash("Post successfully edited", "SUCCESS")
+        return redirect(f'/posts/{post_id}')
+    return redirect(f'/posts/{post_id}/edit')
 
 @app.route('/posts/<int:post_id>/delete', methods=["POST"])
 def delete_post(post_id):
@@ -149,5 +172,6 @@ def delete_post(post_id):
 
     db.session.delete(post)
     db.session.commit()
+    flash("Post deleted", "SUCCESS")
     
     return redirect('/users')

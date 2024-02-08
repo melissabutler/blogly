@@ -4,11 +4,12 @@
 
 {% block content %}
 <h2>Add Post for {{user.first_name}} {{user.last_name}}</h2>
-<form action="/users/{user.id}}/posts/new" method="POST">
+<form>
     <input type="text" name="title" placeholder="Title">
     <input type="text" name="content" placeholder="Content">
-    <button class="btn btn-primary">Add Post</button>
-    <a href="/users/{{user.id}}" class="btn btn-danger">Cancel</button>
+    <button class="btn btn-primary" formmethod="POST">Add Post</button>
+    <button class="btn btn-danger" formaction="/users/{{user.id}}">Cancel</button>
+    <!-- <a href="/users/{{user.id}}" class="btn btn-danger">Cancel</button> -->
 </form>
 
 {% endblock %}
