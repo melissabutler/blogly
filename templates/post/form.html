@@ -7,6 +7,15 @@
 <form>
     <input type="text" name="title" placeholder="Title">
     <input type="text" name="content" placeholder="Content">
+
+    {% for tag in tags %}
+    <input type="checkbox"
+            value="{{tag.id}}"
+            id="tag_{{tag.id}}"
+            name="tags">
+    <label for="{{tag.id}}">{{tag.name}}</label>
+    {% endfor %}
+
     <button class="btn btn-primary" formmethod="POST">Add Post</button>
     <button class="btn btn-danger" formaction="/users/{{user.id}}">Cancel</button>
     <!-- <a href="/users/{{user.id}}" class="btn btn-danger">Cancel</button> -->

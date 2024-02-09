@@ -3,6 +3,14 @@
 {% block content%}
 <h1>{{post.title}}</h1>
 <p>{{post.content}}</p>
+{% if post.tags %}
+<p>
+    <b>Tags:</b>
+    {% for tag in post.tags %}
+    <a href="/tags/{{ tag.id }}">{{tag.name}}</a>
+    {% endfor %}
+  </p>
+  {% endif %}
 <form>
     <button class="btn btn-primary" formaction="/posts/{{post.id}}/edit" formmethod="GET">Edit</button>
     <button class="btn btn-danger" formaction="/posts/{{post.id}}/delete" formmethod="POST">Delete</button>  

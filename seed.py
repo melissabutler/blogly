@@ -1,4 +1,4 @@
-from models import User, db, Post
+from models import User, db, Post, Tag, PostTag
 from app import app
 
 db.drop_all()
@@ -20,3 +20,13 @@ new_post3 = Post(title="Yummy", content="This cake recipe is awesome", user_id=1
 
 db.session.add_all([new_post1, new_post2, new_post3])
 db.session.commit()
+
+
+#make some tags
+video_games = Tag(name="video games")
+food = Tag(name="food")
+cats = Tag(name="cats")
+
+db.session.add_all([video_games, food, cats])
+db.session.commit()
+

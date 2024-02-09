@@ -28,16 +28,20 @@ class User(db.Model):
     image_url = db.Column(db.Text,
                           nullable=False,
                           default="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg")
-    
-    # posts = db.relationship("Post", backref="user", cascade="all, delete")
-    
+    # relationship navigation
+
+    # User > posts, casdcade delete
+    posts = db.relationship("Post", backref="user", cascade="all, delete", passive_deletes=True)
+
+
+
     @property
     def full_name(self):
         """Return first and last name together"""
         return f"{self.first_name} {self.last_name}"
 
 class Post(db.Model):
-    """Post """
+    """Post. A user can make many posts"""
     __tablename__ = "posts"
     def __repr__(self):
         p = self
@@ -55,12 +59,25 @@ class Post(db.Model):
         nullable=False,
         default=datetime.datetime.now)
     user_id = db.Column(db.Integer,
-                        db.ForeignKey('users.id', ondelete="cascade"),
-                        nullable=False,
-                        )
-    user= db.relationship("User", backref='users')
+                        db.ForeignKey('users.id', ondelete="CASCADE"),
+                        nullable=False)
+    
+    posttags = db.relationship('PostTag', cascade='all, delete', passive_deletes=True)
 
+class PostTag(db.Model):
+    """ Mapping a tag to a post"""
+
+    __tablename__ = "post_tags"
+
+    post_id = db.Column(db.Integer,
+                        db.ForeignKey("posts.id", ondelete="CASCADE"),
+                        primary_key=True)
+    tag_id = db.Column(db.Integer,
+                       db.ForeignKey("tags.id", ondelete="CASCADE"),
+                       primary_key=True)
+    
 class Tag(db.Model):
+    """ Tag groups for posts"""
     __tablename__ = "tags"
 
     id= db.Column(db.Integer,
@@ -69,6 +86,16 @@ class Tag(db.Model):
     name= db.Column(db.Text,
                      unique=True)
     
+    # relationship navigation
+    # Nav Tag > Post > PostTag > Tag
+    posts = db.relationship(
+        'Post',
+          secondary='post_tags',
+            cascade="all,delete",
+              backref='tags')
+
+
+   
     
 def connect_db(app):
     """Connect to database."""

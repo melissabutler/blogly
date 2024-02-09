@@ -1,0 +1,11 @@
+{% extends 'base.html'%}
+{% block title %}Edit Tag {{tag.name}}{% endblock %}
+{% block content%}
+</ul>
+<h2>Edit Tag {{tag.name}}</h2>
+<form>
+    <input type="text" name="name" placeholder="Enter a tag name">
+    <button class="btn btn-primary" formmethod="POST">Add</button>   
+    <button class="btn btn-danger" formaction="/tags/{{tag.id}}">Cancel</button>
+</form>
+{% endblock %}
